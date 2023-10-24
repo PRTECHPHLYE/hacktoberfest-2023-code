@@ -1,0 +1,64 @@
+Given an array arr[] denoting heights of N towers and a positive integer K.
+
+For each tower, you must perform exactly one of the following operations exactly once.
+
+Increase the height of the tower by K
+Decrease the height of the tower by K
+Find out the minimum possible difference between the height of the shortest and tallest towers after you have modified each tower.
+
+You can find a slight modification of the problem here.
+Note: It is compulsory to increase or decrease the height by K for each tower. After the operation, the resultant array should not contain any negative integers.
+
+
+Example 1:
+
+Input:
+K = 2, N = 4
+Arr[] = {1, 5, 8, 10}
+Output:
+5
+Explanation:
+The array can be modified as 
+{1+k, 5-k, 8-k, 10-k} = {3, 3, 6, 8}. 
+The difference between 
+the largest and the smallest is 8-3 = 5.
+
+
+
+
+
+def minimizeHeightDifference(arr, N, K):
+    if N == 1:
+        return 0
+
+    arr.sort()  # Sort the array to make the process efficient.
+    min_possible, max_possible = 0, 0
+
+    # Initialize min_possible and max_possible with initial values.
+    min_possible, max_possible = arr[0] + K, arr[N - 1] - K
+
+    # Ensure min_possible is less than or equal to max_possible.
+    if min_possible > max_possible:
+        min_possible, max_possible = max_possible, min_possible
+
+    for i in range(1, N - 1):
+        current_height = arr[i]
+        potential_min = current_height - K
+        potential_max = current_height + K
+
+        if potential_min >= min_possible or potential_max <= max_possible:
+            continue
+
+        if max_possible - potential_min <= potential_max - min_possible:
+            min_possible = potential_min
+        else:
+            max_possible = potential_max
+
+    return min(max_possible - min_possible, arr[N - 1] - arr[0])
+
+# Example usage:
+N = 4
+K = 2
+arr = [1, 5, 8, 10]
+result = minimizeHeightDifference(arr, N, K)
+print(result)  # Output: 5
